@@ -4,9 +4,6 @@
   "private": false,
   "description": "CLI interativo para inicializar, gerenciar e atualizar a estrutura de agentes de IA (.agents/AGENTS.md e SKILL.md) no seu projeto. Padronize instruções para Claude, Cursor, Copilot, ChatGPT com suporte a múltiplos frameworks como Next.js e Laravel.",
   "type": "module",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
