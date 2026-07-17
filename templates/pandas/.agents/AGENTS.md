@@ -6,6 +6,7 @@
 - Código, nomes de colunas, variáveis e scripts em **inglês**.
 - Comentários, documentação e commits em **português**.
 - Commits semânticos: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `chore:`.
+- **Controle de Progresso**: Sempre que iniciar, alterar ou concluir uma tarefa, documente e atualize as informações no arquivo `.agents/PROGRESS.md`, registrando o progresso e o status da atividade.
 
 ### Stack Tecnológica
 - **Python 3.9+**

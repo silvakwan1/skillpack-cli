@@ -4,14 +4,16 @@ import { FRAMEWORKS } from "../src/utils/frameworks";
 import { readManifest } from "../src/utils/manifest";
 
 vi.mock("fs-extra", async () => {
-  const actual = await vi.importActual<typeof fs>("fs-extra");
+  const actual = await vi.importActual<Record<string, unknown>>("fs-extra");
+  const actualFs = (actual.default || actual) as Record<string, unknown>;
   return {
     default: {
-      ...actual,
+      ...actualFs,
       pathExists: vi.fn(),
       readJson: vi.fn(),
       writeJson: vi.fn(),
       copy: vi.fn(),
+      pathExistsSync: vi.fn().mockReturnValue(true),
     },
   };
 });
@@ -59,5 +61,34 @@ describe("manifest utils", () => {
 
     const manifest = await readManifest("mock-dir");
     expect(manifest.frameworks).toContain("next");
+  });
+});
+
+describe("runInit", () => {
+  it("deve copiar arquivos base incluindo opencode.json e AGENTS.md se .agents não existir", async () => {
+    const mockedFs = vi.mocked(fs);
+    mockedFs.copy.mockClear();
+
+    // Mock pathExists to say .agents does not exist, but base configurations do
+    mockedFs.pathExists.mockImplementation(async (filePath) => {
+      const p = String(filePath);
+      if (p.endsWith(".agents")) return false;
+      return true;
+    });
+
+    mockedFs.readJson.mockResolvedValue({
+      version: 1,
+      frameworks: [],
+      managedFiles: [],
+    } as never);
+
+    // Import runInit dynamically to ensure mock is applied
+    const { runInit } = await import("../src/commands/init");
+    await runInit([]);
+
+    expect(mockedFs.copy).toHaveBeenCalledWith(
+      expect.stringContaining("opencode.json"),
+      expect.stringContaining("opencode.json"),
+    );
   });
 });

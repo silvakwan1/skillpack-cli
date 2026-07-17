@@ -6,6 +6,7 @@
 - Código, banco de dados, variáveis e endpoints em **inglês**.
 - Comentários, documentação e commits em **português**.
 - Commits semânticos: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`.
+- **Controle de Progresso**: Sempre que iniciar, alterar ou concluir uma tarefa, documente e atualize as informações no arquivo `.agents/PROGRESS.md`, registrando o progresso e o status da atividade.
 
 ### Stack Tecnológica
 - Linguagens de backend populares (Node.js/TS, Python, Go, Java, PHP)

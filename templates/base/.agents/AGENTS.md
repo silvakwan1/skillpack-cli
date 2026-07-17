@@ -12,6 +12,7 @@ Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, etc.) devem 
 2. **SOLID e Clean Code**: Siga estritamente os princípios SOLID, DRY e Clean Code.
 3. **Padrões de Commit**: Use commits semânticos (ex: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `chore:`).
 4. **Verificações Automáticas**: Rode testes e linters locais (como `npm run lint`, `vitest`, `php artisan test` etc.) antes de considerar uma tarefa concluída.
+5. **Controle de Progresso**: Sempre que iniciar, alterar ou concluir uma tarefa, documente e atualize as informações no arquivo `.agents/PROGRESS.md`, registrando o progresso e o status da atividade.
 
 ## 🔄 Busca de Skills no Git e Melhoria Contínua
 - Se precisar de mais informações, padrões de código ou novas diretrizes de desenvolvimento, você pode buscar no Git (como repositórios oficiais dos frameworks, guias de estilo consolidados ou o próprio repositório remoto).

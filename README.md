@@ -32,7 +32,7 @@ npx skills --list
 ## Comportamento
 
 - **Se `.agents` não existir**: cria a estrutura base (`AGENTS.md`,
-  `config.json`, `.manifest.json`) + a(s) skill(s) pedida(s).
+  `config.json`, `.manifest.json`) + a(s) skill(s) pedida(s) e copia os arquivos de configuração adicionais (como `opencode.json`, `.cursorrules`, `.claudeprompt`, `.vscode`) para a raiz do projeto.
 - **Se `.agents` já existir**: só adiciona as skills que ainda não foram
   aplicadas. Skills já aplicadas (registradas em `.agents/.manifest.json`)
   não são sobrescritas — suas edições manuais em `SKILL.md` são
@@ -41,15 +41,17 @@ npx skills --list
 ## Estrutura gerada
 
 ```
-.agents/
-├── AGENTS.md            # regras gerais do agente
-├── config.json           # config editável
-├── .manifest.json         # controle interno — não editar
-└── skills/
-    ├── next/
-    │   └── SKILL.md      # regras específicas de Next.js
-    └── laravel/
-        └── SKILL.md      # regras específicas de Laravel
+.
+├── opencode.json         # config do OpenCode
+└── .agents/
+    ├── AGENTS.md         # regras gerais do agente
+    ├── config.json       # config editável
+    ├── .manifest.json    # controle interno — não editar
+    └── skills/
+        ├── next/
+        │   └── SKILL.md      # regras específicas de Next.js
+        └── laravel/
+            └── SKILL.md      # regras específicas de Laravel
 ```
 
 ## Adicionar um novo framework

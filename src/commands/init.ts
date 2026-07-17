@@ -46,6 +46,13 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
       await fs.copy(vscodeSrc, vscodeDest);
       console.log(pc.green("✔ .vscode/settings.json criado."));
     }
+
+    const opencodeSrc = path.join(baseTemplatesDir, "opencode.json");
+    const opencodeDest = path.join(cwd, "opencode.json");
+    if (await fs.pathExists(opencodeSrc)) {
+      await fs.copy(opencodeSrc, opencodeDest);
+      console.log(pc.green("✔ opencode.json criado na raiz do projeto."));
+    }
   }
 
   const manifest = await readManifest(agentsDir);
