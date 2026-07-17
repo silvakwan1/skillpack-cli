@@ -1,5 +1,11 @@
 # skillpack-cli
 
+## 2.0.1
+
+### Patch Changes
+
+- c691659: Adiciona guia de contribuição (CONTRIBUTING.md), define explicitamente o pacote como público, adiciona metadados do repositório e melhora a descrição e as keywords no package.json para melhor indexação e SEO no npm.
+
 ## 2.0.0
 
 ### Major Changes
