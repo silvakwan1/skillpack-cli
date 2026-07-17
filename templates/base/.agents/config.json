@@ -1,0 +1,6 @@
+{
+  "$schema": "https://example.com/init-skills.schema.json",
+  "generatedBy": "init-skills",
+  "frameworks": [],
+  "notes": "Edite este arquivo para customizar o comportamento das skills. Rode 'npx skills --list' para ver frameworks disponíveis."
+}
