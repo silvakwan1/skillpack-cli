@@ -1,5 +1,11 @@
 # skillpack-cli
 
+## 2.0.2
+
+### Patch Changes
+
+- a1be9a4: adicionar banner e links oficiais ao README.md
+
 ## 2.0.1
 
 ### Patch Changes
