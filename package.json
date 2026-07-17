@@ -22,7 +22,7 @@
     }
   },
   "bin": {
-    "skills": "./dist/cli.js"
+    "skills": "dist/cli.js"
   },
   "files": [
     "dist",
