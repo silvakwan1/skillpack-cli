@@ -1,5 +1,11 @@
 # skillpack-cli
 
+## 2.0.3
+
+### Patch Changes
+
+- bd5f3bb: chore: upgrade vitest to resolve vulnerability issues
+
 ## 2.0.2
 
 ### Patch Changes
