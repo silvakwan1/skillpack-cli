@@ -1,6 +1,6 @@
 {
   "name": "skillpack-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CLI para inicializar e atualizar a pasta .agents (AGENTS.md + SKILL.md) do projeto, com suporte a múltiplos frameworks.",
   "type": "module",
   "publishConfig": {
@@ -24,7 +24,10 @@
   "bin": {
     "skills": "./dist/cli.js"
   },
-  "files": ["dist", "templates"],
+  "files": [
+    "dist",
+    "templates"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -43,7 +46,13 @@
     "changeset:add": "changeset",
     "changeset:commit": "git add .changeset/* && git commit -m \"chore: adicionar changeset para novas alteracoes\""
   },
-  "keywords": ["agents", "skills", "ai", "cli", "scaffold"],
+  "keywords": [
+    "agents",
+    "skills",
+    "ai",
+    "cli",
+    "scaffold"
+  ],
   "license": "MIT",
   "dependencies": {
     "commander": "^12.1.0",
