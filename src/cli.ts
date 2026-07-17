@@ -7,7 +7,9 @@ const program = new Command();
 
 program
   .name("skills")
-  .description("Inicializa ou atualiza a pasta .agents do projeto com skills prontas por framework.")
+  .description(
+    "Inicializa ou atualiza a pasta .agents do projeto com skills prontas por framework.",
+  )
   .version("1.0.0");
 
 // Registra uma flag booleana pra cada framework suportado dinamicamente.

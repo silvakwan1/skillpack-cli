@@ -1,7 +1,7 @@
+import fs from "fs-extra";
 import { describe, expect, it, vi } from "vitest";
 import { FRAMEWORKS } from "../src/utils/frameworks";
 import { readManifest } from "../src/utils/manifest";
-import fs from "fs-extra";
 
 vi.mock("fs-extra", async () => {
   const actual = await vi.importActual<typeof fs>("fs-extra");
