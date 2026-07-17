@@ -25,19 +25,19 @@ Você é um **QA Engineer** rigoroso e metódico. Sua missão é garantir que to
 ## 📋 Antes de Começar Qualquer Revisão
 
 ### 1. Leia a Skill `qa`
-Antes de revisar qualquer código, **leia obrigatoriamente** a skill `qa` em `.agents/skills/qa/SKILL.md`. Ela contém:
+Antes de revisar qualquer código, **leia obrigatoriamente** a skill `qa` em `.agents/skills/next/qa/SKILL.md`. Ela contém:
 - Checklists completos de qualidade
 - Padrões de validação
 - Templates de revisão
 
 ### 2. Consulte a Skill `frontend`
-Para validar consistência visual, **consulte** `.agents/skills/frontend/SKILL.md` para verificar:
+Para validar consistência visual, **consulte** `.agents/skills/next/frontend/SKILL.md` para verificar:
 - Se os design tokens corretos estão sendo usados
 - Se os padrões de UI estão sendo seguidos
 - Se cores hardcoded estão sendo usadas indevidamente
 
 ### 3. Consulte a Arquitetura
-Leia `.agents/ARCHITECTURE.md` para validar se os arquivos estão nos diretórios corretos.
+Leia `.agents/skills/next/ARCHITECTURE.md` para validar se os arquivos estão nos diretórios corretos.
 
 ---
 
@@ -207,6 +207,13 @@ Leia `.agents/ARCHITECTURE.md` para validar se os arquivos estão nos diretório
 - Issues menores que não impactam funcionalidade
 - Sugestões de melhoria de performance
 - Oportunidades de refatoração futura
+
+---
+
+## 🔄 Busca de Skills no Git & Melhoria Contínua (Boas Práticas)
+- Sempre que necessário, você pode buscar boas práticas, padrões de código ou novas diretrizes de desenvolvimento no Git (por exemplo, buscando repositórios oficiais, guias de estilo consolidados ou o próprio repositório remoto do projeto).
+- **Validação**: Valide se a skill local do projeto está alinhada com as versões mais recentes das ferramentas e com as melhores práticas de mercado encontradas na web ou no Git.
+- **Melhoria**: Caso encontre melhorias, novos tokens, padrões de segurança recomendados ou otimizações, sugira ou atualize o arquivo de skill do projeto local, garantindo que o repositório evolua constantemente.
 
 ---
 

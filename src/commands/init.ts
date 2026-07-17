@@ -22,6 +22,30 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
     // Primeira execução: cria a estrutura base (AGENTS.md raiz + config.json)
     await fs.copy(path.join(TEMPLATES_ROOT, "base", ".agents"), agentsDir);
     console.log(pc.green("✔ .agents criado com a configuração base."));
+
+    // Copiar arquivos de configuração adicionais para a raiz
+    const baseTemplatesDir = path.join(TEMPLATES_ROOT, "base");
+
+    const claudepromptSrc = path.join(baseTemplatesDir, ".claudeprompt");
+    const claudepromptDest = path.join(cwd, ".claudeprompt");
+    if (await fs.pathExists(claudepromptSrc)) {
+      await fs.copy(claudepromptSrc, claudepromptDest);
+      console.log(pc.green("✔ .claudeprompt criado na raiz do projeto."));
+    }
+
+    const cursorrulesSrc = path.join(baseTemplatesDir, ".cursorrules");
+    const cursorrulesDest = path.join(cwd, ".cursorrules");
+    if (await fs.pathExists(cursorrulesSrc)) {
+      await fs.copy(cursorrulesSrc, cursorrulesDest);
+      console.log(pc.green("✔ .cursorrules criado na raiz do projeto."));
+    }
+
+    const vscodeSrc = path.join(baseTemplatesDir, ".vscode");
+    const vscodeDest = path.join(cwd, ".vscode");
+    if (await fs.pathExists(vscodeSrc)) {
+      await fs.copy(vscodeSrc, vscodeDest);
+      console.log(pc.green("✔ .vscode/settings.json criado."));
+    }
   }
 
   const manifest = await readManifest(agentsDir);
@@ -45,6 +69,7 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
 
     const alreadyApplied = manifest.frameworks.includes(key);
     const skillTargetDir = path.join(agentsDir, "skills", key);
+    const agentTargetDir = path.join(agentsDir, "agents", key);
     const templateDir = path.join(TEMPLATES_ROOT, fw.templateDir, ".agents");
 
     if (alreadyApplied && (await fs.pathExists(skillTargetDir))) {
@@ -52,10 +77,33 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
       continue;
     }
 
-    await fs.copy(templateDir, skillTargetDir);
+    // Copiar subpasta skills
+    const templateSkillsDir = path.join(templateDir, "skills");
+    if (await fs.pathExists(templateSkillsDir)) {
+      await fs.copy(templateSkillsDir, skillTargetDir);
+    }
+
+    // Copiar subpasta agents
+    const templateAgentsDir = path.join(templateDir, "agents");
+    if (await fs.pathExists(templateAgentsDir)) {
+      await fs.copy(templateAgentsDir, agentTargetDir);
+    }
+
+    // Copiar outros arquivos (como ARCHITECTURE.md, AGENTS.md, PROGRESS.md, references) para a pasta da skill
+    if (await fs.pathExists(templateDir)) {
+      const items = await fs.readdir(templateDir);
+      for (const item of items) {
+        if (item === "skills" || item === "agents") continue;
+        const itemPath = path.join(templateDir, item);
+        const destPath = path.join(skillTargetDir, item);
+        await fs.copy(itemPath, destPath);
+      }
+    }
+
     manifest.frameworks.push(key);
     manifest.managedFiles.push(`skills/${key}`);
-    console.log(pc.green(`✔ skill "${fw.label}" adicionada em .agents/skills/${key}/`));
+    manifest.managedFiles.push(`agents/${key}`);
+    console.log(pc.green(`✔ skill "${fw.label}" adicionada e organizada em .agents/`));
   }
 
   await writeManifest(agentsDir, manifest);

@@ -19,4 +19,29 @@ export const FRAMEWORKS: Record<string, FrameworkConfig> = {
     label: "Laravel",
     templateDir: "laravel",
   },
+  nest: {
+    flag: "nest",
+    label: "NestJS",
+    templateDir: "nest",
+  },
+  express: {
+    flag: "express",
+    label: "Express",
+    templateDir: "express",
+  },
+  pandas: {
+    flag: "pandas",
+    label: "Pandas",
+    templateDir: "pandas",
+  },
+  frontend: {
+    flag: "frontend",
+    label: "Frontend (Generic)",
+    templateDir: "frontend",
+  },
+  backend: {
+    flag: "backend",
+    label: "Backend (Generic)",
+    templateDir: "backend",
+  },
 };

@@ -1,42 +1,46 @@
 # AGENTS.md
 
-Este arquivo define como agentes de IA (Claude, Copilot, Cursor, etc.) devem
-se comportar dentro deste repositório. Ele é lido automaticamente por
-ferramentas compatíveis com o padrão AGENTS.md.
+Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, etc.) devem se comportar dentro deste repositório.
 
-## Papel do agente
+## 🤖 Papel Geral do Agente
+- Você é um agente de desenvolvimento de software com acesso ao código deste projeto.
+- Priorize soluções limpas, testáveis, seguras e consistentes com os padrões existentes.
+- **Importante**: Antes de fazer qualquer alteração, verifique se existem diretivas específicas para os frameworks utilizados em `.agents/skills/<framework>/`. Elas têm prioridade máxima sobre regras genéricas.
 
-- Você é um agente de desenvolvimento com acesso ao código deste projeto.
-- Priorize soluções simples, testáveis e consistentes com os padrões já
-  usados no repositório.
-- Antes de propor uma mudança estrutural, procure por skills específicas
-  em `.agents/skills/<framework>/SKILL.md` — elas têm prioridade sobre
-  convenções genéricas.
+## 🛠️ Regras Gerais de Desenvolvimento
+1. **Qualidade e Testes**: Nunca remova testes existentes. Sempre escreva testes para novas funcionalidades.
+2. **SOLID e Clean Code**: Siga estritamente os princípios SOLID, DRY e Clean Code.
+3. **Padrões de Commit**: Use commits semânticos (ex: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`, `chore:`).
+4. **Verificações Automáticas**: Rode testes e linters locais (como `npm run lint`, `vitest`, `php artisan test` etc.) antes de considerar uma tarefa concluída.
 
-## Regras gerais
+## 🔄 Busca de Skills no Git e Melhoria Contínua
+- Se precisar de mais informações, padrões de código ou novas diretrizes de desenvolvimento, você pode buscar no Git (como repositórios oficiais dos frameworks, guias de estilo consolidados ou o próprio repositório remoto).
+- **Validação e Melhoria**: Valide se as skills locais do projeto em `.agents/skills/` estão alinhadas com as melhores práticas atuais e sugira melhorias ou atualizações nestes arquivos locais conforme necessário.
 
-1. Nunca remova testes existentes para "fazer o build passar".
-2. Prefira editar arquivos existentes a criar novos, a menos que a skill
-   do framework diga o contrário.
-3. Sempre rode lint/format antes de considerar uma tarefa concluída, se
-   houver script configurado no `package.json` (ou equivalente).
-4. Documente decisões não óbvias com comentários curtos, não com prosa.
-
-## Estrutura desta pasta
-
+## 📁 Estrutura da Pasta `.agents/`
 ```
 .agents/
-├── AGENTS.md          # este arquivo — regras gerais
-├── config.json         # configuração da lib init-skills
-├── .manifest.json       # controle interno (não editar manualmente)
+├── AGENTS.md            # Este arquivo - Regras gerais do repositório
+├── PROGRESS.md          # Acompanhamento do progresso das tarefas
+├── config.json          # Configuração da biblioteca
+├── .manifest.json       # Controle interno da biblioteca (não editar)
+├── agents/
+│   └── <framework>/     # Agentes especializados daquele framework
 └── skills/
-    └── <framework>/
-        └── SKILL.md    # regras específicas daquele framework
+    └── <framework>/     # Skills detalhadas e checklists de QA daquele framework
+        ├── AGENTS.md    # Definição dos agentes especializados do framework
+        └── ARCHITECTURE.md # Diretrizes de arquitetura do framework
 ```
 
-## Como atualizar
-
-Rode `npx skills --<framework>` para adicionar/atualizar uma skill
-específica. Frameworks já aplicados não são sobrescritos automaticamente —
-edite `.agents/skills/<framework>/SKILL.md` livremente, suas mudanças são
-preservadas em execuções futuras.
+## 🚀 Como Adicionar ou Atualizar Skills
+Rode o comando do CLI para adicionar ou atualizar frameworks:
+```bash
+npx skills --next      # Adiciona/atualiza Next.js
+npx skills --laravel   # Adiciona/atualiza Laravel
+npx skills --nest      # Adiciona/atualiza NestJS
+npx skills --express   # Adiciona/atualiza Express
+npx skills --pandas    # Adiciona/atualiza Pandas
+npx skills --frontend  # Adiciona/atualiza Frontend Genérico
+npx skills --backend   # Adiciona/atualiza Backend Genérico
+```
+As edições manuais feitas dentro de `.agents/` não são sobrescritas automaticamente em execuções futuras.

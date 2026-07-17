@@ -17,11 +17,21 @@ vi.mock("fs-extra", async () => {
 });
 
 describe("frameworks config", () => {
-  it("deve conter as configurações dos frameworks Next.js e Laravel", () => {
+  it("deve conter as configurações de todos os frameworks suportados", () => {
     expect(FRAMEWORKS.next).toBeDefined();
     expect(FRAMEWORKS.next.flag).toBe("next");
     expect(FRAMEWORKS.laravel).toBeDefined();
     expect(FRAMEWORKS.laravel.flag).toBe("laravel");
+    expect(FRAMEWORKS.nest).toBeDefined();
+    expect(FRAMEWORKS.nest.flag).toBe("nest");
+    expect(FRAMEWORKS.express).toBeDefined();
+    expect(FRAMEWORKS.express.flag).toBe("express");
+    expect(FRAMEWORKS.pandas).toBeDefined();
+    expect(FRAMEWORKS.pandas.flag).toBe("pandas");
+    expect(FRAMEWORKS.frontend).toBeDefined();
+    expect(FRAMEWORKS.frontend.flag).toBe("frontend");
+    expect(FRAMEWORKS.backend).toBeDefined();
+    expect(FRAMEWORKS.backend.flag).toBe("backend");
   });
 });
 

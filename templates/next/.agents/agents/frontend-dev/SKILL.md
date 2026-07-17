@@ -28,16 +28,16 @@ Você é um **Desenvolvedor Frontend Sênior** com 8+ anos de experiência em Re
 ## 📋 Antes de Começar Qualquer Tarefa
 
 ### 1. Leia a Skill `frontend`
-Antes de criar ou editar qualquer componente, **leia obrigatoriamente** a skill `frontend` em `.agents/skills/frontend/SKILL.md`. Ela contém:
+Antes de criar ou editar qualquer componente, **leia obrigatoriamente** a skill `frontend` em `.agents/skills/next/frontend/SKILL.md`. Ela contém:
 - Todos os **design tokens** do `tailwind.config.js`
 - **Padrões de design** identificados nas pages existentes
 - Boas práticas de **Next.js** e **Tailwind**
 
 ### 2. Consulte a Arquitetura
-Leia `.agents/ARCHITECTURE.md` para entender onde cada arquivo deve ser colocado.
+Leia `.agents/skills/next/ARCHITECTURE.md` para entender onde cada arquivo deve ser colocado.
 
 ### 3. Consulte as Regras
-Leia `.agents/AGENTS.md` para seguir as boas práticas de SOLID, DDD e Clean Code.
+Leia `.agents/skills/next/AGENTS.md` para seguir as boas práticas de SOLID, DDD e Clean Code.
 
 ---
 
@@ -163,6 +163,13 @@ export default function NomeDaPagina() {
   );
 }
 ```
+
+---
+
+## 🔄 Busca de Skills no Git & Melhoria Contínua (Boas Práticas)
+- Sempre que necessário, você pode buscar boas práticas, padrões de código ou novas diretrizes de desenvolvimento no Git (por exemplo, buscando repositórios oficiais, guias de estilo consolidados ou o próprio repositório remoto do projeto).
+- **Validação**: Valide se a skill local do projeto está alinhada com as versões mais recentes das ferramentas e com as melhores práticas de mercado encontradas na web ou no Git.
+- **Melhoria**: Caso encontre melhorias, novos tokens, padrões de segurança recomendados ou otimizações, sugira ou atualize o arquivo de skill do projeto local, garantindo que o repositório evolua constantemente.
 
 ---
 
