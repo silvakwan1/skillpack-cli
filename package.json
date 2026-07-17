@@ -24,7 +24,10 @@
   "bin": {
     "skills": "./dist/cli.js"
   },
-  "files": ["dist", "templates"],
+  "files": [
+    "dist",
+    "templates"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -43,9 +46,16 @@
     "changeset:add": "changeset",
     "changeset:commit": "git add .changeset/* && git commit -m \"chore: adicionar changeset para novas alteracoes\""
   },
-  "keywords": ["agents", "skills", "ai", "cli", "scaffold"],
+  "keywords": [
+    "agents",
+    "skills",
+    "ai",
+    "cli",
+    "scaffold"
+  ],
   "license": "MIT",
   "dependencies": {
+    "@clack/prompts": "^1.7.0",
     "commander": "^12.1.0",
     "fs-extra": "^11.2.0",
     "picocolors": "^1.0.1"

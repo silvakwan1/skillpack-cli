@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import * as p from "@clack/prompts";
 import { Command } from "commander";
+import pc from "picocolors";
 import { runInit } from "./commands/init";
 import { FRAMEWORKS } from "./utils/frameworks";
 
@@ -30,9 +32,44 @@ program
       return;
     }
 
-    const selected = opts.all
+    let selected = opts.all
       ? Object.keys(FRAMEWORKS)
       : Object.keys(FRAMEWORKS).filter((key) => opts[FRAMEWORKS[key].flag]);
+
+    if (selected.length === 0) {
+      p.intro(pc.cyan("Skillpack CLI"));
+
+      const promptResult = await p.select({
+        message: "Selecione o framework/skill para configurar:",
+        options: [
+          ...Object.entries(FRAMEWORKS).map(([key, fw]) => ({
+            value: key,
+            label: fw.label,
+            hint: `--${fw.flag}`,
+          })),
+          {
+            value: "all",
+            label: "Todos os frameworks",
+            hint: "--all",
+          },
+        ],
+      });
+
+      if (p.isCancel(promptResult)) {
+        p.cancel("Operação cancelada.");
+        process.exit(0);
+      }
+
+      if (promptResult === "all") {
+        selected = Object.keys(FRAMEWORKS);
+      } else {
+        selected = [promptResult as string];
+      }
+
+      await runInit(selected);
+      p.outro(pc.green("Configuração concluída com sucesso!"));
+      return;
+    }
 
     await runInit(selected);
   });
