@@ -1,5 +1,9 @@
 # skillpack-cli
 
+[![npm version](https://img.shields.io/npm/v/skillpack-cli.svg?style=flat-square)](https://www.npmjs.com/package/skillpack-cli)
+[![npm downloads](https://img.shields.io/npm/dm/skillpack-cli.svg?style=flat-square)](https://www.npmjs.com/package/skillpack-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+
 CLI que cria/atualiza a pasta `.agents` do seu projeto (com `AGENTS.md` e
 `SKILL.md` por framework), pra padronizar como agentes de IA (Claude,
 Cursor, Copilot etc.) trabalham no repositório.
@@ -7,7 +11,7 @@ Cursor, Copilot etc.) trabalham no repositório.
 ## Instalação
 
 ```bash
-npm i -D @silvakwan1/skillpack-cli
+npm i -D skillpack-cli
 ```
 
 ## Uso

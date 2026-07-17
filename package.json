@@ -1,10 +1,10 @@
 {
-  "name": "@silvakwan1/skillpack-cli",
+  "name": "skillpack-cli",
   "version": "2.0.0",
   "description": "CLI para inicializar e atualizar a pasta .agents (AGENTS.md + SKILL.md) do projeto, com suporte a múltiplos frameworks.",
   "type": "module",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
