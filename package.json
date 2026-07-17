@@ -54,6 +54,14 @@
     "scaffold"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silvakwan1/skillpack-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/silvakwan1/skillpack-cli/issues"
+  },
+  "homepage": "https://github.com/silvakwan1/skillpack-cli#readme",
   "dependencies": {
     "@clack/prompts": "^1.7.0",
     "commander": "^12.1.0",
