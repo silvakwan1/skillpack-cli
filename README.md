@@ -7,7 +7,7 @@ Cursor, Copilot etc.) trabalham no repositório.
 ## Instalação
 
 ```bash
-npm i -D skillpack-cli
+npm i -D @silvakwan1/skillpack-cli
 ```
 
 ## Uso
