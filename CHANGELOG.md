@@ -1,5 +1,11 @@
 # skillpack-cli
 
+## 2.0.5
+
+### Patch Changes
+
+- 1030863: adicionar alias 'skillpack' ao bin no package.json para npx skillpack
+
 ## 2.0.4
 
 ### Patch Changes
