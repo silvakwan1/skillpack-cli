@@ -1,5 +1,15 @@
 # skillpack-cli
 
+## 2.1.0
+
+### Minor Changes
+
+- 0162c82: padronizar estrutura de agentes para .agents/agents, suporte a formato dual (.yml e SKILL.md), framework generic js (--js) e skills base de backend/frontend
+
+### Patch Changes
+
+- d9ffd5d: atualizar README com instrucoes de uso sem instalar (npx skillpack-cli) e instalado (npx skills)
+
 ## 2.0.5
 
 ### Patch Changes
