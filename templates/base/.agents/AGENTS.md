@@ -25,13 +25,46 @@ Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, etc.) devem 
 ├── PROGRESS.md          # Acompanhamento do progresso das tarefas
 ├── config.json          # Configuração da biblioteca
 ├── .manifest.json       # Controle interno da biblioteca (não editar)
+├── agente/              # Agentes YML com atribuições de skills
+│   ├── architect.yml    # Arquiteto de Software
+│   ├── code-reviewer.yml # Revisor de Código
+│   ├── devops.yml       # DevOps Engineer
+│   ├── documentador.yml # Documentador
+│   └── qa-lead.yml      # QA Lead
 ├── agents/
 │   └── <framework>/     # Agentes especializados daquele framework
 └── skills/
-    └── <framework>/     # Skills detalhadas e checklists de QA daquele framework
-        ├── AGENTS.md    # Definição dos agentes especializados do framework
-        └── ARCHITECTURE.md # Diretrizes de arquitetura do framework
+    ├── security-audit/  # Auditoria de segurança (OWASP, secrets, deps)
+    ├── code-review/     # Revisão de código multi-eixo
+    ├── git-workflow/    # Padrões de Git e commits semânticos
+    ├── performance/     # Otimização de performance
+    ├── documentation/   # Padrões de documentação
+    ├── testing/         # Estratégia de testes
+    └── <framework>/     # Skills detalhadas daquele framework
 ```
+
+## 🤖 Agentes Disponíveis (YML)
+
+Os agentes abaixo estão definidos em `.agents/agente/` e possuem skills atribuídas:
+
+| Agente | Arquivo | Skills | Acionar Quando |
+|--------|---------|--------|----------------|
+| Arquiteto | `architect.yml` | security-audit, performance, code-review | Decisões de arquitetura, refatoração estrutural |
+| Revisor | `code-reviewer.yml` | code-review, security-audit, testing | Antes de merge, auditoria de qualidade |
+| DevOps | `devops.yml` | git-workflow, security-audit, performance | CI/CD, deploy, infra |
+| Documentador | `documentador.yml` | documentation, code-review | Criar/atualizar docs |
+| QA Lead | `qa-lead.yml` | testing, security-audit, code-review, performance | Antes de release, validação |
+
+## 🔧 Skills Universais Disponíveis
+
+| Skill | Path | Descrição |
+|-------|------|-----------|
+| `security-audit` | `.agents/skills/security-audit/SKILL.md` | OWASP Top 10, secrets, XSS/CSRF/SQLi |
+| `code-review` | `.agents/skills/code-review/SKILL.md` | Revisão multi-eixo: corretude, segurança, performance |
+| `git-workflow` | `.agents/skills/git-workflow/SKILL.md` | Commits semânticos, branching, PRs |
+| `performance` | `.agents/skills/performance/SKILL.md` | Profiling, caching, bundle size, queries |
+| `documentation` | `.agents/skills/documentation/SKILL.md` | README, ADRs, JSDoc, CHANGELOG |
+| `testing` | `.agents/skills/testing/SKILL.md` | Unitários, integração, E2E, coverage |
 
 ## 🚀 Como Adicionar ou Atualizar Skills
 Rode o comando do CLI para adicionar ou atualizar frameworks:

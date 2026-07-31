@@ -134,3 +134,79 @@ export const getCachedUser = cache(async (id: string) => {
   return await db.user.findUnique({ where: { id } });
 });
 ```
+
+---
+
+## 🗄️ Banco de Dados com Prisma
+
+### Configuração do Prisma Client
+
+Sempre use um singleton para evitar múltiplas instâncias em desenvolvimento (hot reload):
+
+```ts
+// src/lib/db.ts
+import { PrismaClient } from "@prisma/client";
+
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
+
+export const db = globalForPrisma.prisma ?? new PrismaClient({
+  log: process.env.NODE_ENV === "development" ? ["query", "warn", "error"] : ["error"],
+});
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+```
+
+### Padrões de CRUD com Prisma
+
+```ts
+// Listar com paginação
+const posts = await db.post.findMany({
+  where: { published: true },
+  include: { author: { select: { name: true, email: true } } },
+  orderBy: { createdAt: "desc" },
+  take: 20,
+  skip: (page - 1) * 20,
+});
+
+// Criar com validação Zod
+const parsed = createPostSchema.parse(formData);
+const post = await db.post.create({
+  data: { ...parsed, authorId: session.user.id },
+});
+
+// Update parcial
+await db.post.update({
+  where: { id: postId },
+  data: { title: parsed.title, content: parsed.content },
+});
+
+// Delete seguro (verificar ownership)
+await db.post.delete({
+  where: { id: postId, authorId: session.user.id },
+});
+```
+
+### Regras de Prisma:
+- [ ] **Singleton**: Sempre usar o padrão singleton para o `PrismaClient`.
+- [ ] **Select/Include**: Usar `select` ou `include` para trazer apenas os campos necessários (evitar `SELECT *`).
+- [ ] **Paginação**: Sempre paginar listagens com `take` e `skip` ou cursor-based.
+- [ ] **Transactions**: Usar `db.$transaction()` para operações que modificam múltiplas tabelas.
+- [ ] **Migrations**: Rodar `npx prisma migrate dev` para criar migrações em desenvolvimento.
+- [ ] **Seed**: Manter `prisma/seed.ts` para dados iniciais.
+
+### Validação com Zod + Prisma
+
+```ts
+import { z } from "zod";
+
+// Schema de validação alinhado com o modelo Prisma
+export const createPostSchema = z.object({
+  title: z.string().min(3, "Título deve ter pelo menos 3 caracteres").max(200),
+  content: z.string().min(10, "Conteúdo deve ter pelo menos 10 caracteres"),
+  published: z.boolean().default(false),
+  categoryId: z.string().uuid("ID de categoria inválido").optional(),
+});
+
+export type CreatePostInput = z.infer<typeof createPostSchema>;
+```
+

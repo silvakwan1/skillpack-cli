@@ -13,6 +13,96 @@ if (!fs.pathExistsSync(TEMPLATES_ROOT)) {
   TEMPLATES_ROOT = path.join(__dirname, "../../templates");
 }
 
+/**
+ * Copia skills universais do template base para .agents/skills/
+ * sem sobrescrever skills que já existem (preserva edições manuais do usuário).
+ */
+async function copyBaseSkills(
+  agentsDir: string,
+  manifest: { baseSkills: string[]; managedFiles: string[] },
+): Promise<void> {
+  const baseSkillsDir = path.join(TEMPLATES_ROOT, "base", ".agents", "skills");
+  if (!(await fs.pathExists(baseSkillsDir))) return;
+
+  const skillDirs = await fs.readdir(baseSkillsDir);
+  for (const skillName of skillDirs) {
+    const srcDir = path.join(baseSkillsDir, skillName);
+    const stat = await fs.stat(srcDir);
+    if (!stat.isDirectory()) continue;
+
+    const destDir = path.join(agentsDir, "skills", skillName);
+
+    // Se a skill já está registrada no manifest E o diretório existe, não sobrescrever
+    if (manifest.baseSkills.includes(skillName) && (await fs.pathExists(destDir))) {
+      console.log(pc.dim(`— skill base "${skillName}" já configurada, mantendo como está.`));
+      continue;
+    }
+
+    // Se o diretório já existe mas não está no manifest (edição manual), não sobrescrever
+    if (await fs.pathExists(destDir)) {
+      console.log(
+        pc.dim(`— skill base "${skillName}" já existe (manual), registrando no manifest.`),
+      );
+      if (!manifest.baseSkills.includes(skillName)) {
+        manifest.baseSkills.push(skillName);
+        manifest.managedFiles.push(`skills/${skillName}`);
+      }
+      continue;
+    }
+
+    // Skill nova — copiar do template
+    await fs.copy(srcDir, destDir);
+    manifest.baseSkills.push(skillName);
+    manifest.managedFiles.push(`skills/${skillName}`);
+    console.log(pc.green(`✔ skill base "${skillName}" adicionada em .agents/skills/`));
+  }
+}
+
+/**
+ * Copia agentes YML do template base para .agents/agente/
+ * sem sobrescrever agentes que já existem (preserva edições manuais do usuário).
+ */
+async function copyBaseAgents(
+  agentsDir: string,
+  manifest: { baseAgents: string[]; managedFiles: string[] },
+): Promise<void> {
+  const baseAgentsDir = path.join(TEMPLATES_ROOT, "base", ".agents", "agente");
+  if (!(await fs.pathExists(baseAgentsDir))) return;
+
+  const agentFiles = await fs.readdir(baseAgentsDir);
+  for (const fileName of agentFiles) {
+    if (!fileName.endsWith(".yml") && !fileName.endsWith(".yaml")) continue;
+
+    const agentName = path.parse(fileName).name;
+    const srcFile = path.join(baseAgentsDir, fileName);
+    const destDir = path.join(agentsDir, "agente");
+    const destFile = path.join(destDir, fileName);
+
+    // Se o agente já está registrado no manifest E o arquivo existe, não sobrescrever
+    if (manifest.baseAgents.includes(agentName) && (await fs.pathExists(destFile))) {
+      console.log(pc.dim(`— agente "${agentName}" já configurado, mantendo como está.`));
+      continue;
+    }
+
+    // Se o arquivo já existe mas não está no manifest (edição manual), não sobrescrever
+    if (await fs.pathExists(destFile)) {
+      console.log(pc.dim(`— agente "${agentName}" já existe (manual), registrando no manifest.`));
+      if (!manifest.baseAgents.includes(agentName)) {
+        manifest.baseAgents.push(agentName);
+        manifest.managedFiles.push(`agente/${fileName}`);
+      }
+      continue;
+    }
+
+    // Agente novo — copiar do template
+    await fs.ensureDir(destDir);
+    await fs.copy(srcFile, destFile);
+    manifest.baseAgents.push(agentName);
+    manifest.managedFiles.push(`agente/${fileName}`);
+    console.log(pc.green(`✔ agente "${agentName}" (${fileName}) adicionado em .agents/agente/`));
+  }
+}
+
 export async function runInit(selectedFrameworks: string[]): Promise<void> {
   const cwd = process.cwd();
   const agentsDir = path.join(cwd, ".agents");
@@ -20,7 +110,17 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
 
   if (!agentsExists) {
     // Primeira execução: cria a estrutura base (AGENTS.md raiz + config.json)
-    await fs.copy(path.join(TEMPLATES_ROOT, "base", ".agents"), agentsDir);
+    // Copiar apenas os arquivos base, NÃO as subpastas skills/ e agente/ (são tratadas separadamente)
+    const baseSrcDir = path.join(TEMPLATES_ROOT, "base", ".agents");
+    const baseItems = await fs.readdir(baseSrcDir);
+    await fs.ensureDir(agentsDir);
+    for (const item of baseItems) {
+      // Pular subpastas que são gerenciadas separadamente
+      if (item === "skills" || item === "agente") continue;
+      const itemSrc = path.join(baseSrcDir, item);
+      const itemDest = path.join(agentsDir, item);
+      await fs.copy(itemSrc, itemDest);
+    }
     console.log(pc.green("✔ .agents criado com a configuração base."));
 
     // Copiar arquivos de configuração adicionais para a raiz
@@ -57,6 +157,11 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
 
   const manifest = await readManifest(agentsDir);
 
+  // Sempre garantir que skills universais e agentes YML do base estão instalados
+  // (sem sobrescrever edições manuais do usuário)
+  await copyBaseSkills(agentsDir, manifest);
+  await copyBaseAgents(agentsDir, manifest);
+
   if (selectedFrameworks.length === 0) {
     if (!agentsExists) {
       console.log(
@@ -67,6 +172,7 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
     } else {
       console.log(pc.yellow("Nada a fazer: nenhuma flag de framework foi passada."));
     }
+    await writeManifest(agentsDir, manifest);
     return;
   }
 

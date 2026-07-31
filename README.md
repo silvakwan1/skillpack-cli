@@ -41,11 +41,37 @@ npx skills --list
 ## Comportamento
 
 - **Se `.agents` não existir**: cria a estrutura base (`AGENTS.md`,
-  `config.json`, `.manifest.json`) + a(s) skill(s) pedida(s) e copia os arquivos de configuração adicionais (como `opencode.json`, `.cursorrules`, `.claudeprompt`, `.vscode`) para a raiz do projeto.
+  `config.json`, `.manifest.json`) + skills universais + agentes YML + a(s) skill(s) pedida(s) e copia os arquivos de configuração adicionais (como `opencode.json`, `.cursorrules`, `.claudeprompt`, `.vscode`) para a raiz do projeto.
 - **Se `.agents` já existir**: só adiciona as skills que ainda não foram
   aplicadas. Skills já aplicadas (registradas em `.agents/.manifest.json`)
   não são sobrescritas — suas edições manuais em `SKILL.md` são
-  preservadas.
+  preservadas. Skills universais e agentes YML novos são adicionados
+  automaticamente sem sobrescrever os existentes.
+
+## Skills Universais (Base)
+
+Ao rodar qualquer comando, as seguintes skills universais são instaladas automaticamente (se ainda não existirem):
+
+| Skill | Descrição |
+|-------|-----------|
+| `security-audit` | Auditoria de segurança: OWASP Top 10, secrets, dependências, XSS/CSRF/SQLi |
+| `code-review` | Revisão de código multi-eixo: corretude, legibilidade, arquitetura, performance |
+| `git-workflow` | Padrões de Git: commits semânticos, branching, PR descriptions, changelog |
+| `performance` | Otimização de performance: profiling, bundle size, queries, caching |
+| `documentation` | Geração de docs: README, ADRs, API docs, JSDoc/TSDoc, CHANGELOG |
+| `testing` | Estratégia de testes: unitários, integração, E2E, coverage, mocking |
+
+## Agentes YML (Base)
+
+Agentes pré-configurados em formato `.yml` são instalados em `.agents/agente/`:
+
+| Agente | Arquivo | Skills Atribuídas |
+|--------|---------|-------------------|
+| Arquiteto de Software | `architect.yml` | security-audit, performance, code-review |
+| Revisor de Código | `code-reviewer.yml` | code-review, security-audit, testing |
+| DevOps Engineer | `devops.yml` | git-workflow, security-audit, performance |
+| Documentador | `documentador.yml` | documentation, code-review |
+| QA Lead | `qa-lead.yml` | testing, security-audit, code-review, performance |
 
 ## Estrutura gerada
 
@@ -56,7 +82,25 @@ npx skills --list
     ├── AGENTS.md         # regras gerais do agente
     ├── config.json       # config editável
     ├── .manifest.json    # controle interno — não editar
+    ├── agente/           # agentes YML com atribuições de skills
+    │   ├── architect.yml
+    │   ├── code-reviewer.yml
+    │   ├── devops.yml
+    │   ├── documentador.yml
+    │   └── qa-lead.yml
     └── skills/
+        ├── security-audit/
+        │   └── SKILL.md      # skill universal de segurança
+        ├── code-review/
+        │   └── SKILL.md      # skill universal de revisão
+        ├── git-workflow/
+        │   └── SKILL.md      # skill universal de git
+        ├── performance/
+        │   └── SKILL.md      # skill universal de performance
+        ├── documentation/
+        │   └── SKILL.md      # skill universal de documentação
+        ├── testing/
+        │   └── SKILL.md      # skill universal de testes
         ├── next/
         │   └── SKILL.md      # regras específicas de Next.js
         └── laravel/
@@ -77,3 +121,11 @@ express: {
 ```
 
 Pronto — `npx skills --express` já funciona.
+
+## Proteção contra sobrescrita
+
+O CLI **nunca** sobrescreve arquivos que você editou manualmente:
+
+- Skills universais e agentes YML são rastreados no `.manifest.json`.
+- Se um arquivo já existe no seu projeto, ele é preservado.
+- Novas skills/agentes adicionados em updates futuros da lib são instalados automaticamente sem afetar os existentes.
