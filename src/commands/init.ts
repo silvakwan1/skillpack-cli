@@ -96,9 +96,8 @@ async function copyBaseAgents(
 
   const agentItems = await fs.readdir(sourceDir);
   for (const item of agentItems) {
-    const agentName = item.endsWith(".yml") || item.endsWith(".yaml")
-      ? path.parse(item).name
-      : item;
+    const agentName =
+      item.endsWith(".yml") || item.endsWith(".yaml") ? path.parse(item).name : item;
 
     const srcItem = path.join(sourceDir, item);
     const destItem = path.join(destAgentsDir, item);
