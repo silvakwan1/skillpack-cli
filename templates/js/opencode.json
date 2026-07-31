@@ -1,0 +1,5 @@
+{
+  "name": "js-generic",
+  "description": "Configuração de agentes e skills para projetos JavaScript genéricos (Node.js / Vanilla JS).",
+  "version": "1.0.0"
+}

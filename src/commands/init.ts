@@ -59,47 +59,74 @@ async function copyBaseSkills(
 }
 
 /**
- * Copia agentes YML do template base para .agents/agente/
+ * Copia agentes (.yml e SKILL.md) do template base para .agents/agents/
  * sem sobrescrever agentes que já existem (preserva edições manuais do usuário).
  */
 async function copyBaseAgents(
   agentsDir: string,
   manifest: { baseAgents: string[]; managedFiles: string[] },
 ): Promise<void> {
-  const baseAgentsDir = path.join(TEMPLATES_ROOT, "base", ".agents", "agente");
-  if (!(await fs.pathExists(baseAgentsDir))) return;
+  const baseAgentsDir = path.join(TEMPLATES_ROOT, "base", ".agents", "agents");
+  const legacyBaseAgentsDir = path.join(TEMPLATES_ROOT, "base", ".agents", "agente");
 
-  const agentFiles = await fs.readdir(baseAgentsDir);
-  for (const fileName of agentFiles) {
-    if (!fileName.endsWith(".yml") && !fileName.endsWith(".yaml")) continue;
+  const sourceDir = (await fs.pathExists(baseAgentsDir))
+    ? baseAgentsDir
+    : (await fs.pathExists(legacyBaseAgentsDir))
+      ? legacyBaseAgentsDir
+      : null;
 
-    const agentName = path.parse(fileName).name;
-    const srcFile = path.join(baseAgentsDir, fileName);
-    const destDir = path.join(agentsDir, "agente");
-    const destFile = path.join(destDir, fileName);
+  if (!sourceDir) return;
 
-    // Se o agente já está registrado no manifest E o arquivo existe, não sobrescrever
-    if (manifest.baseAgents.includes(agentName) && (await fs.pathExists(destFile))) {
+  const destAgentsDir = path.join(agentsDir, "agents");
+
+  // Migrar pasta antiga .agents/agente do projeto do usuário para .agents/agents se existir
+  const userLegacyDir = path.join(agentsDir, "agente");
+  if (await fs.pathExists(userLegacyDir)) {
+    await fs.ensureDir(destAgentsDir);
+    const legacyFiles = await fs.readdir(userLegacyDir);
+    for (const f of legacyFiles) {
+      const srcFile = path.join(userLegacyDir, f);
+      const destFile = path.join(destAgentsDir, f);
+      if (!(await fs.pathExists(destFile))) {
+        await fs.copy(srcFile, destFile);
+      }
+    }
+    await fs.remove(userLegacyDir).catch(() => {});
+  }
+
+  const agentItems = await fs.readdir(sourceDir);
+  for (const item of agentItems) {
+    const agentName = item.endsWith(".yml") || item.endsWith(".yaml")
+      ? path.parse(item).name
+      : item;
+
+    const srcItem = path.join(sourceDir, item);
+    const destItem = path.join(destAgentsDir, item);
+
+    // Se o agente já está registrado no manifest E o item existe, não sobrescrever
+    if (manifest.baseAgents.includes(agentName) && (await fs.pathExists(destItem))) {
       console.log(pc.dim(`— agente "${agentName}" já configurado, mantendo como está.`));
       continue;
     }
 
-    // Se o arquivo já existe mas não está no manifest (edição manual), não sobrescrever
-    if (await fs.pathExists(destFile)) {
+    // Se o item já existe mas não está no manifest (edição manual), não sobrescrever
+    if (await fs.pathExists(destItem)) {
       console.log(pc.dim(`— agente "${agentName}" já existe (manual), registrando no manifest.`));
       if (!manifest.baseAgents.includes(agentName)) {
         manifest.baseAgents.push(agentName);
-        manifest.managedFiles.push(`agente/${fileName}`);
+        manifest.managedFiles.push(`agents/${item}`);
       }
       continue;
     }
 
     // Agente novo — copiar do template
-    await fs.ensureDir(destDir);
-    await fs.copy(srcFile, destFile);
-    manifest.baseAgents.push(agentName);
-    manifest.managedFiles.push(`agente/${fileName}`);
-    console.log(pc.green(`✔ agente "${agentName}" (${fileName}) adicionado em .agents/agente/`));
+    await fs.ensureDir(destAgentsDir);
+    await fs.copy(srcItem, destItem);
+    if (!manifest.baseAgents.includes(agentName)) {
+      manifest.baseAgents.push(agentName);
+    }
+    manifest.managedFiles.push(`agents/${item}`);
+    console.log(pc.green(`✔ agente "${agentName}" (${item}) adicionado em .agents/agents/`));
   }
 }
 
@@ -110,13 +137,13 @@ export async function runInit(selectedFrameworks: string[]): Promise<void> {
 
   if (!agentsExists) {
     // Primeira execução: cria a estrutura base (AGENTS.md raiz + config.json)
-    // Copiar apenas os arquivos base, NÃO as subpastas skills/ e agente/ (são tratadas separadamente)
+    // Copiar apenas os arquivos base, NÃO as subpastas skills/ e agents/ (são tratadas separadamente)
     const baseSrcDir = path.join(TEMPLATES_ROOT, "base", ".agents");
     const baseItems = await fs.readdir(baseSrcDir);
     await fs.ensureDir(agentsDir);
     for (const item of baseItems) {
       // Pular subpastas que são gerenciadas separadamente
-      if (item === "skills" || item === "agente") continue;
+      if (item === "skills" || item === "agente" || item === "agents") continue;
       const itemSrc = path.join(baseSrcDir, item);
       const itemDest = path.join(agentsDir, item);
       await fs.copy(itemSrc, itemDest);

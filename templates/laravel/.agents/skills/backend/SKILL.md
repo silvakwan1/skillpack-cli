@@ -1,76 +1,104 @@
 ---
 name: laravel-backend
 description: |
-  Skill de backend para Laravel. Contém boas práticas do Eloquent ORM, Controllers, Form Requests,
-  Services/Actions, tratamento de erros, migrations e segurança PHP.
-  Consulte esta skill antes de programar lógica de servidor em Laravel.
+  Skill de backend para Laravel. Contém padrões de Clean Architecture, Form Requests, Eloquent ORM,
+  API Resources, Jobs/Queues, Pest PHP testing e boas práticas de segurança.
 ---
 
-# Skill Laravel Backend — Melhores Práticas
+# Skill Laravel Backend — Melhores Práticas & Clean Architecture
 
-## 📦 Eloquent ORM e Models
-- **Evite SQL Bruto**: Sempre use Eloquent ou Query Builder para queries.
-- **Eager Loading**: Sempre use `with()` para evitar o problema de queries N+1 quando buscar dados relacionados.
-- **Mass Assignment Protection**: Defina as propriedades `$fillable` ou `$guarded` nos models.
-- **Relacionamentos**: Defina tipos de retorno explicitamente nos métodos de relacionamento.
+## 🏛️ Estrutura Arquitetural Recomendada (Clean Architecture / Domain Driven)
 
-```php
-// ✅ BOM
-public function posts(): HasMany
-{
-    return $this->hasMany(Post::class);
-}
-
-// Buscar com eager loading
-$users = User::with('posts')->get();
-```
+- **`app/Domain/`**: Entidades, Value Objects e interfaces de Repositórios sem acoplamento com o framework.
+- **`app/Actions/` ou `app/Services/`**: Casos de uso (Use Cases) que orquestram regras de negócio puras.
+- **`app/Infrastructure/`**: Implementações concretas de repositórios usando Eloquent ORM e adapters.
+- **`app/Http/`**: Controllers enxutos, Form Requests para validação e API Resources para formatação de respostas JSON.
 
 ---
 
-## 🌐 HTTP e Validação
-- **Form Requests**: Separe a validação do controller usando Form Requests.
-- **API Resources**: Use resources para transformar os dados retornados nas APIs.
+## 📋 Form Requests & Controllers Enxutos
+
+- **Controllers "Thin"**: Controllers devem apenas receber o Form Request, delegar a execução para uma Action/Service e retornar um API Resource ou resposta JSON.
+- **Form Requests**: Toda validação de entrada deve ocorrer em classes `FormRequest`.
 
 ```php
-// app/Http/Requests/StorePostRequest.php
-public function rules(): array
+// app/Http/Requests/StoreUserRequest.php
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreUserRequest extends FormRequest
 {
-    return [
-        'title' => ['required', 'string', 'max:255'],
-        'body' => ['required', 'string'],
-    ];
-}
-```
-
----
-
-## ⚙️ Services e Actions
-- Extraia a lógica pesada de negócio dos Controllers para classes dedicadas de Serviço ou Ação.
-- Use Injeção de Dependência no construtor para acoplar essas classes.
-
-```php
-// app/Actions/CreatePostAction.php
-class CreatePostAction
-{
-    public function execute(array $data, User $author): Post
+    public function authorize(): bool
     {
-        return DB::transaction(function () use ($data, $author) {
-            return $author->posts()->create($data);
-        });
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
+        ];
     }
 }
 ```
 
 ---
 
-## 🔒 Segurança Backend
-1. **Proteção CSRF**: Garanta que todas as rotas web usem o middleware de CSRF.
-2. **Autorização**: Use Policies ou Gates para validar permissões de usuários em controllers.
+## ⚡ Eloquent ORM & Prevenção do Problema N+1
+
+- **Eager Loading**: Sempre utilize `with()` para carregar relacionamentos e evitar queries N+1.
+- **API Resources**: Nunca retorne modelos Eloquent brutos. Mapeie os dados usando `JsonResource`.
+
 ```php
-public function update(Request $request, Post $post)
+// app/Http/Resources/UserResource.php
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
 {
-    $this->authorize('update', $post);
-    // ...
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'created_at' => $this->created_at->toIso8601String(),
+        ];
+    }
 }
 ```
-3. **Escapes HTML**: No Blade, use sempre `{{ $value }}` que escapa o conteúdo contra XSS. Evite `{!! $value !!}` a menos que o conteúdo tenha sido sanitizado previamente.
+
+---
+
+## 🧪 Estratégia de Testes com Pest PHP
+
+- **Feature Tests**: Teste requisições HTTP simuladas ponta a ponta.
+- **Unit Tests**: Teste Actions e Services de forma isolada com `expect()`.
+
+```php
+// tests/Feature/UserRegistrationTest.php
+test('new users can register with valid payload', function () {
+    $response = $this->postJson('/api/v1/users', [
+        'name' => 'Kauan Ferreira',
+        'email' => 'kauan@example.com',
+        'password' => 'password123',
+    ]);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure(['data' => ['id', 'name', 'email']]);
+
+    $this->assertDatabaseHas('users', ['email' => 'kauan@example.com']);
+});
+```
+
+---
+
+## 🔒 Regras de Segurança:
+- [ ] **Mass Assignment**: Sempre proteja modelos com `$fillable` explícito ou `$guarded`.
+- [ ] **SQL Injection**: Evite `DB::raw()` sem bindings parametrizados.
+- [ ] **Sanitize & Validate**: Validar todas as entradas antes de qualquer mutação no banco.

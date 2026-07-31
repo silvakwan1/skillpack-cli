@@ -44,4 +44,9 @@ export const FRAMEWORKS: Record<string, FrameworkConfig> = {
     label: "Backend (Generic)",
     templateDir: "backend",
   },
+  js: {
+    flag: "js",
+    label: "JavaScript (Generic)",
+    templateDir: "js",
+  },
 };

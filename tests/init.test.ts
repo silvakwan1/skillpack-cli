@@ -37,6 +37,8 @@ describe("frameworks config", () => {
     expect(FRAMEWORKS.frontend.flag).toBe("frontend");
     expect(FRAMEWORKS.backend).toBeDefined();
     expect(FRAMEWORKS.backend.flag).toBe("backend");
+    expect(FRAMEWORKS.js).toBeDefined();
+    expect(FRAMEWORKS.js.flag).toBe("js");
   });
 });
 
@@ -113,12 +115,12 @@ describe("runInit", () => {
     mockedFs.readdir.mockImplementation(async (dirPath) => {
       const p = String(dirPath);
       if (p.includes("base") && p.endsWith(".agents")) {
-        return ["AGENTS.md", "config.json", "PROGRESS.md", "skills", "agente"] as never;
+        return ["AGENTS.md", "config.json", "PROGRESS.md", "skills", "agents"] as never;
       }
       if (p.includes("skills")) {
         return ["security-audit", "code-review"] as never;
       }
-      if (p.includes("agente")) {
+      if (p.includes("agents")) {
         return ["architect.yml", "code-reviewer.yml"] as never;
       }
       return [] as never;
@@ -147,7 +149,7 @@ describe("runInit", () => {
     mockedFs.pathExists.mockImplementation(async (filePath) => {
       const p = String(filePath);
       // .agents existe
-      if (p.endsWith(".agents") && !p.includes("skills") && !p.includes("agente")) return true;
+      if (p.endsWith(".agents") && !p.includes("skills") && !p.includes("agents")) return true;
       // Skill security-audit já existe
       if (p.includes("security-audit")) return true;
       // Skill code-review NÃO existe ainda
@@ -168,7 +170,7 @@ describe("runInit", () => {
       if (p.includes("skills")) {
         return ["security-audit", "code-review"] as never;
       }
-      if (p.includes("agente")) {
+      if (p.includes("agents")) {
         return [] as never;
       }
       return [] as never;

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, etc.) devem se comportar dentro deste repositório.
+Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, Antigravity, etc.) devem se comportar dentro deste repositório.
 
 ## 🤖 Papel Geral do Agente
 - Você é um agente de desenvolvimento de software com acesso ao código deste projeto.
@@ -25,14 +25,15 @@ Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, etc.) devem 
 ├── PROGRESS.md          # Acompanhamento do progresso das tarefas
 ├── config.json          # Configuração da biblioteca
 ├── .manifest.json       # Controle interno da biblioteca (não editar)
-├── agente/              # Agentes YML com atribuições de skills
-│   ├── architect.yml    # Arquiteto de Software
-│   ├── code-reviewer.yml # Revisor de Código
-│   ├── devops.yml       # DevOps Engineer
-│   ├── documentador.yml # Documentador
-│   └── qa-lead.yml      # QA Lead
-├── agents/
-│   └── <framework>/     # Agentes especializados daquele framework
+├── agents/              # Agentes em formato YML e SKILL.md
+│   ├── architect/       # Arquiteto de Software (SKILL.md + architect.yml)
+│   ├── code-reviewer/  # Revisor de Código (SKILL.md + code-reviewer.yml)
+│   ├── devops/          # DevOps Engineer (SKILL.md + devops.yml)
+│   ├── documentador/    # Documentador (SKILL.md + documentador.yml)
+│   ├── qa-lead/         # QA Lead (SKILL.md + qa-lead.yml)
+│   ├── backend-dev/     # Backend Dev Sênior (SKILL.md + backend-dev.yml)
+│   ├── frontend-dev/    # Frontend Dev Sênior (SKILL.md + frontend-dev.yml)
+│   └── <framework>/     # Agentes especializados por framework
 └── skills/
     ├── security-audit/  # Auditoria de segurança (OWASP, secrets, deps)
     ├── code-review/     # Revisão de código multi-eixo
@@ -40,20 +41,24 @@ Este arquivo define como os agentes de IA (Claude, Copilot, Cursor, etc.) devem 
     ├── performance/     # Otimização de performance
     ├── documentation/   # Padrões de documentação
     ├── testing/         # Estratégia de testes
-    └── <framework>/     # Skills detalhadas daquele framework
+    ├── backend/         # Padrões universais de Backend
+    ├── frontend/        # Padrões universais de Frontend
+    └── <framework>/     # Skills detalhadas por framework
 ```
 
-## 🤖 Agentes Disponíveis (YML)
+## 🤖 Agentes Disponíveis (.agents/agents/)
 
-Os agentes abaixo estão definidos em `.agents/agente/` e possuem skills atribuídas:
+Os agentes estão definidos com versão `SKILL.md` (Markdown) e `.yml` (YAML):
 
-| Agente | Arquivo | Skills | Acionar Quando |
-|--------|---------|--------|----------------|
-| Arquiteto | `architect.yml` | security-audit, performance, code-review | Decisões de arquitetura, refatoração estrutural |
-| Revisor | `code-reviewer.yml` | code-review, security-audit, testing | Antes de merge, auditoria de qualidade |
-| DevOps | `devops.yml` | git-workflow, security-audit, performance | CI/CD, deploy, infra |
-| Documentador | `documentador.yml` | documentation, code-review | Criar/atualizar docs |
-| QA Lead | `qa-lead.yml` | testing, security-audit, code-review, performance | Antes de release, validação |
+| Agente | Pasta | Skills | Acionar Quando |
+|--------|-------|--------|----------------|
+| Arquiteto | `agents/architect/` | security-audit, performance, code-review | Decisões de arquitetura, refatoração estrutural |
+| Revisor | `agents/code-reviewer/` | code-review, security-audit, testing | Antes de merge, auditoria de qualidade |
+| DevOps | `agents/devops/` | git-workflow, security-audit, performance | CI/CD, deploy, infra |
+| Documentador | `agents/documentador/` | documentation, code-review | Criar/atualizar docs |
+| QA Lead | `agents/qa-lead/` | testing, security-audit, code-review, performance | Antes de release, validação |
+| Backend Dev | `agents/backend-dev/` | backend, security-audit, code-review | APIs, banco de dados, persistência |
+| Frontend Dev | `agents/frontend-dev/` | frontend, code-review, performance | UI/UX, componentes, acessibilidade |
 
 ## 🔧 Skills Universais Disponíveis
 
@@ -65,10 +70,13 @@ Os agentes abaixo estão definidos em `.agents/agente/` e possuem skills atribu�
 | `performance` | `.agents/skills/performance/SKILL.md` | Profiling, caching, bundle size, queries |
 | `documentation` | `.agents/skills/documentation/SKILL.md` | README, ADRs, JSDoc, CHANGELOG |
 | `testing` | `.agents/skills/testing/SKILL.md` | Unitários, integração, E2E, coverage |
+| `backend` | `.agents/skills/backend/SKILL.md` | REST/GraphQL, Prisma, SQL, JWT, Zod |
+| `frontend` | `.agents/skills/frontend/SKILL.md` | Componentes, WCAG, Mobile-first, React Hook Form |
 
 ## 🚀 Como Adicionar ou Atualizar Skills
 Rode o comando do CLI para adicionar ou atualizar frameworks:
 ```bash
+npx skills --js        # Adiciona/atualiza JavaScript (Generic)
 npx skills --next      # Adiciona/atualiza Next.js
 npx skills --laravel   # Adiciona/atualiza Laravel
 npx skills --nest      # Adiciona/atualiza NestJS
