@@ -13,28 +13,39 @@ CLI que cria/atualiza a pasta `.agents` do seu projeto (com `AGENTS.md` e
 `SKILL.md` por framework), pra padronizar como agentes de IA (Claude,
 Cursor, Copilot etc.) trabalham no repositório.
 
-## Instalação e Uso Direto
+## Uso sem Instalar (On-Demand)
 
-Você não precisa instalar previamente! Pode executar diretamente via `npx`:
+Você pode rodar diretamente sem instalar nada no seu projeto usando `npx skillpack-cli`:
 
 ```bash
-# cria .agents do zero (se não existir) e adiciona a skill de Next.js
-npx skillpack --next
+# cria .agents do zero e adiciona a skill de Next.js
+npx skillpack-cli --next
 
-# adiciona a skill de Laravel (mantém o que já existe, só soma)
-npx skillpack --laravel
+# adiciona várias skills de uma vez
+npx skillpack-cli --next --laravel
 
-# várias de uma vez
-npx skillpack --next --laravel
-
-# todas as skills disponíveis
-npx skillpack --all
+# adiciona todas as skills disponíveis
+npx skillpack-cli --all
 
 # ver frameworks suportados
-npx skillpack --list
+npx skillpack-cli --list
 ```
 
-Também é possível usar os aliases `npx skills` ou `npx skillpack-cli`.
+## Uso Instalado no Projeto
+
+Se preferir manter a lib nas dependências do projeto:
+
+```bash
+npm i -D skillpack-cli
+```
+
+Após instalar, você pode usar qualquer um dos atalhos disponíveis:
+
+```bash
+npx skills --next
+# ou
+npx skillpack-cli --next
+```
 
 ## Comportamento
 
