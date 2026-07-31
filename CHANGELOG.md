@@ -1,5 +1,11 @@
 # skillpack-cli
 
+## 2.0.4
+
+### Patch Changes
+
+- 28db8a8: adiciona skills base universais, agentes YML e integracao com React Hook Form, Zod e Prisma sem sobrescrever .agents
+
 ## 2.0.3
 
 ### Patch Changes
