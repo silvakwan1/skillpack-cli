@@ -20,7 +20,9 @@
     }
   },
   "bin": {
-    "skills": "dist/cli.js"
+    "skills": "dist/cli.js",
+    "skillpack": "dist/cli.js",
+    "skillpack-cli": "dist/cli.js"
   },
   "bin-name": "skills",
   "files": [
